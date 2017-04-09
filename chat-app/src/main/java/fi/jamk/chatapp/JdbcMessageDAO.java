@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -45,17 +47,17 @@ public class JdbcMessageDAO implements MessageDAO {
 
 	public List<Message> getAllMessages(){
 
-		String sql = "SELECT * FROM messages ORDER BY ts";
+		String sql = "SELECT * FROM messages";
 
 		Connection conn = null;
 
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql);
-			List<Message> messages = null;
+			List<Message> messages = new ArrayList<>();
 			Message message = null;
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				message = new Message(
 					rs.getTimestamp("ts"),
 					rs.getString("message"),

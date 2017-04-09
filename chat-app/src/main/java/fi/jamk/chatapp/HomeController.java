@@ -3,6 +3,7 @@ package fi.jamk.chatapp;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.slf4j.Logger;
@@ -45,9 +46,14 @@ public class HomeController {
         Message message = new Message(timestamp, "hello", "jannu");
         messageDAO.insert(message);
 
-        //Message allMessages = (Message) messageDAO.getAllMessages();
-        //System.out.println(allMessages);
-
+        List<Message> allMessages = messageDAO.getAllMessages();
+        String messagesAll = "";
+        
+        for (Message mes : allMessages) {
+        	messagesAll += mes.toString() + "<br>";
+        	
+        }
+        model.addAttribute("messages", messagesAll);
 		
 		return "home";
 	}

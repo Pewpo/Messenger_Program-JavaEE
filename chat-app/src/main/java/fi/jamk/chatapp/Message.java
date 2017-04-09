@@ -38,6 +38,6 @@ public class Message {
 	}
 	
 	public String toString(){
-		return mes + user + timestamp;
+		return timestamp + ", " + user + ": " + mes;
 	}
 }
