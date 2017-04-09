@@ -9,7 +9,8 @@ public class Message {
 	
 	
 	public Message(){
-		
+		this.mes = "";
+		this.user = "";
 	}
 	
 	public Message(Timestamp timestamp, String mes, String user){
@@ -38,6 +39,6 @@ public class Message {
 	}
 	
 	public String toString(){
-		return timestamp + ", " + user + ": " + mes;
+		return timestamp + ", " + user + ": " + mes + "\n";
 	}
 }
