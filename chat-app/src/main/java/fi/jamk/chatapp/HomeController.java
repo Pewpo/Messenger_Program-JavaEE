@@ -45,8 +45,8 @@ public class HomeController {
         Message message = new Message(timestamp, "hello", "jannu");
         messageDAO.insert(message);
 
-        Message allMessages = (Message) messageDAO.getAllMessages();
-        System.out.println(allMessages);
+        //Message allMessages = (Message) messageDAO.getAllMessages();
+        //System.out.println(allMessages);
 
 		
 		return "home";
