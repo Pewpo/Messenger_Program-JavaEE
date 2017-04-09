@@ -37,11 +37,6 @@ public class HomeController {
 		model.addAttribute("serverTime", formattedDate );
 		
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		Message mes = new Message(timestamp, "hello", "jannu");
-		JdbcMessageDAO mDAO = new JdbcMessageDAO();
-		mDAO.insert(mes);
-		
-		
 		
 		ApplicationContext context =
     		new ClassPathXmlApplicationContext("Spring-Module.xml");
