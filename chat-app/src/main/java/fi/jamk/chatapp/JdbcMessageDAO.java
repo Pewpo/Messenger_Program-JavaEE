@@ -89,21 +89,21 @@ public class JdbcMessageDAO implements MessageDAO {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, name);						
 			ResultSet rs = ps.executeQuery();
-			if(!rs.next()){
-				ps.close();
-				rs.close();
-				conn.close();
-				return false;
-			}
-			if(rs.next()){
-				while (rs.next()) {
-					ps.close();
-					rs.close();
-					conn.close();
+			if (rs.next()){			
 					return true;
-				}
-			}		
-		}catch(SQLException e){}
-		return false;		
+			}
+			
+			ps.close();
+			rs.close();
+			return false;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+				conn.close();
+				} catch (SQLException e) {}
+			}
+		}	
 	}
 }

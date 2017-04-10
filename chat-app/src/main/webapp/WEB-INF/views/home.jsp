@@ -3,15 +3,24 @@
 <%@ page session="false" %>
 <html>
 <head>
-	<title>Home</title>
+	<title>Login | Chatroom</title>
 </head>
 <body>
 <h1>
-	Welcome!  
+	Welcome to chatroom!  
 </h1>
 
-<P>  The time on the server is ${serverTime}. </P>
-<p>Insert your nickname to log in</p>
+<p>Insert your nickname and password to log in.</p>
+<p style="color: red;">
+	<% 
+		String error = request.getParameter("error");
+		if (error == null){
+			error = "";
+		}
+	%>
+		<%= error %>
+</p>
+
 <form:form method="POST" modelAttribute="user">
 	<table>
 	
@@ -23,9 +32,13 @@
 		<tr>
 			<td><label for="password">Password:</label></td>
 			<td><form:input type="password" path="password" id="password" /></td>
-			<td><form:errors path="password" cssClass="password" /></td>
-			<td><input type="submit" value="Log in"/></td>
+			<td><form:errors path="password" cssClass="password" />
 		</tr>
+		<tr>
+			<td><br><input type="submit" value="Log in"/></td>
+		</tr>
+			
+		
 
 	</table>
 </form:form>

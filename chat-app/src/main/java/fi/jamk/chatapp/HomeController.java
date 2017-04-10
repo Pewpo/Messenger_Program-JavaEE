@@ -9,6 +9,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,8 +70,13 @@ public class HomeController {
 	
 	
 	// Lomakkeen luominen
-	@RequestMapping(value = "chat", method = RequestMethod.GET)
-	public String newForm(Model model) {
+	@RequestMapping(value = "/chat", method = RequestMethod.GET)
+	public String newForm(Model model, HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		if (session.getAttribute("username") == null){
+			model.addAttribute("error", "Login first!");
+			return "redirect:/"; 
+		}
 		Message mes = new Message();
 		model.addAttribute("message", mes);
 		
@@ -95,42 +101,44 @@ public class HomeController {
 		
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		HttpSession session = request.getSession();
-		if (request.getSession() != null){
-			String username = mes.getUser();
-			session.setAttribute("UserName", username);
-		}else{
-			mes.setUser((String)request.getAttribute("UserName"));
-		}	
-		
+		mes.setUser((String)session.getAttribute("username"));
 		mes.setTimestamp(timestamp);
 		messageDAO.insert(mes);
 		
 		return "redirect:/chat"; 
 	}
-		//kirjautuminen sisään
-		@RequestMapping(value = "/", method = RequestMethod.POST)
-		public String findThatUser(@ModelAttribute(value="user") User newuser, BindingResult result, Model model, HttpServletRequest request) {
-			boolean answer = false;
-			if (result.hasErrors()) {
-				return "home";
-			} try{
-				System.out.println(answer);
-				answer = messageDAO.findUser(newuser.getNickname(), newuser.getPassword());
-				System.out.println(answer);
-				if(answer == false){
-					return "home";
-				}
-				else if (answer == true){
+	//kirjautuminen sisään
+	@RequestMapping(value = "/", method = RequestMethod.POST)
+	public String findThatUser(@ModelAttribute(value="user") @Valid User user, BindingResult result, Model model, HttpServletRequest request) {
+		boolean exist = false;
+		if (result.hasErrors()) {
+			return "home";
+		} try{
+			//System.out.println(answer);
+			exist = messageDAO.findUser(user.getNickname(), user.getPassword());
+			System.out.println(user.getNickname() + "tätällöfsd");
+			
+			//if (user.getNickname() !=  && user.getPassword() != null){
+				
+				if (exist == false){
+					model.addAttribute("error", "Username or password was invalid.");
+					return "redirect:/";
+				}else if (exist == true){
 					Message mess = new Message();
 					model.addAttribute("message", mess);
-					return "chat";
-				} 
-			}catch(Exception e){
-				System.out.println(e.getMessage());
-			}
-			
-			return "home";
-			
+					HttpSession session = request.getSession();
+					session.setAttribute("username", user.getNickname());
+					return "redirect:/chat";
+				}
+				//model.addAttribute("error", "Fill fields first.");
+				//return "redirect:/";
+			//}
+		}catch(Exception e){
+			System.out.println(e.getMessage());
 		}
-	
+		
+		return "home";
+		
+	}
+
 }

@@ -3,26 +3,24 @@
 <%@ page session="false" %>
 <html>
 <head>
-	<title>Chatroom</title>
+	<title>Chat | Chatroom</title>
 	<script src="jquery-3.2.0.min.js"></script>
 	<script type="text/javascript">
-		$('#messagesTextArea').scrollTop($('#messagesTextArea')[0].scrollHeight);  
-	</script>
+		$(document).ready(function(){
+		   $('#messagesTextArea').scrollTop($('#messagesTextArea')[0].scrollHeight);
+		});
+
+
+</script>
 </head>
 <body>
 <h1>
 	This is a chatroom!
 </h1>
 
-<P>  Messages: <br> <textarea id="messagesTextArea" rows="30" cols="200">${messages}</textarea></P>
+<p>  Messages: <br> <textarea id="messagesTextArea" rows="30" cols="200">${messages}</textarea></p>
 <form:form method="POST" modelAttribute="message">
 	<table>
-	
-		<tr>
-			<td><label for="user">Nickname:</label></td>
-			<td><form:input path="user" id="user" /></td>
-			<td><form:errors path="user" cssClass="user" /></td>
-		</tr>
 		<tr>
 			<td><label for="mes">Message:</label></td>
 			<td><form:input path="mes" id="mes" /></td>

@@ -1,12 +1,19 @@
 package fi.jamk.chatapp;
 
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import sun.security.util.Password;
 
 @SuppressWarnings("restriction")
 public class User {
 	
+	
+	@Size(min=1, message = "Fill field first.")
 	private String nickname = null;
+
+	@Size(min=1, message = "Fill field first.")
 	private String password = null;
 	
 	public User(String nick, String pass){
@@ -28,7 +35,7 @@ public class User {
 	}
 	
 	public String getPassword() {
-		return  password;
+		return password;
 	}
 	
 	public void setPassword(String password) {
