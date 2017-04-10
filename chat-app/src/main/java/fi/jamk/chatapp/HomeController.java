@@ -1,5 +1,6 @@
 package fi.jamk.chatapp;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.Date;
@@ -45,7 +46,8 @@ public class HomeController {
 		String formattedDate = dateFormat.format(date);
 		
 		model.addAttribute("serverTime", formattedDate );
-		
+		User user = new User();
+		model.addAttribute("user", user);
 		/*Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		
 		
@@ -67,7 +69,7 @@ public class HomeController {
 	
 	
 	// Lomakkeen luominen
-	@RequestMapping(value = "/chat", method = RequestMethod.GET)
+	@RequestMapping(value = "chat", method = RequestMethod.GET)
 	public String newForm(Model model) {
 		Message mes = new Message();
 		model.addAttribute("message", mes);
@@ -105,5 +107,29 @@ public class HomeController {
 		
 		return "redirect:/chat"; 
 	}
+		//kirjautuminen sis‰‰n
+		@RequestMapping(value = "/", method = RequestMethod.POST)
+		public String findThatUser(@ModelAttribute(value="user") User newuser, BindingResult result, Model model, HttpServletRequest request) {
+			boolean answer = false;
+			if (result.hasErrors()) {
+				return "home";
+			} try{
+				System.out.println(answer);
+				answer = messageDAO.findUser(newuser.getNickname(), newuser.getPassword());
+				System.out.println(answer);
+				if(answer == false){
+					return "home";
+				}
+				else if (answer == true){
+					model.addAttribute("username", newuser.getNickname());
+					return "chat";
+				} 
+			}catch(Exception e){
+				System.out.println(e.getMessage());
+			}
+			
+			return "home";
+			
+		}
 	
 }
