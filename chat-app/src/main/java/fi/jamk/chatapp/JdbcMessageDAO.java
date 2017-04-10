@@ -90,10 +90,16 @@ public class JdbcMessageDAO implements MessageDAO {
 			ps.setString(1, name);						
 			ResultSet rs = ps.executeQuery();
 			if(!rs.next()){
+				ps.close();
+				rs.close();
+				conn.close();
 				return false;
 			}
 			if(rs.next()){
 				while (rs.next()) {
+					ps.close();
+					rs.close();
+					conn.close();
 					return true;
 				}
 			}		

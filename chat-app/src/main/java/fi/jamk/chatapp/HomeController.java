@@ -121,7 +121,8 @@ public class HomeController {
 					return "home";
 				}
 				else if (answer == true){
-					model.addAttribute("username", newuser.getNickname());
+					Message mess = new Message();
+					model.addAttribute("message", mess);
 					return "chat";
 				} 
 			}catch(Exception e){
