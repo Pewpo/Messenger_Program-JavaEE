@@ -58,4 +58,8 @@ public class User {
 	public void setRepassword(String repassword) {
 		this.repassword = repassword;
 	}
+	
+	public String toString(){
+		return nickname;
+	}
 }

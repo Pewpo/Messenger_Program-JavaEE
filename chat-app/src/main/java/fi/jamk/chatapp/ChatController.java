@@ -33,9 +33,7 @@ public class ChatController {
 	
 	private MessageDAO messageDAO = (MessageDAO) context.getBean("messageDAO");
 	private UserDAO userDAO = (UserDAO) context.getBean("userDAO");
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 */
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
@@ -85,7 +83,7 @@ public class ChatController {
 		return "register"; 
 	}
 	
-	//rekisteröityminen
+	//Rekisteröityminen
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String registerUser(@ModelAttribute(value="user") @Valid User user, BindingResult result, Model model, HttpServletRequest request) {
 		boolean registered;
@@ -107,7 +105,6 @@ public class ChatController {
 					return "redirect:/register";
 				}
 			}else{
-				System.out.println("fdsfsd");
 				model.addAttribute("error", "Username length: 5 characters & Password length: 5 characters");
 				return "redirect:/register";
 			}
@@ -137,12 +134,17 @@ public class ChatController {
         	messagesAll += mess.toString(); 
         }
         model.addAttribute("messages", messagesAll);
+        
+        List<User> allUsers = userDAO.getAllUsers((String)session.getAttribute("username"));
+        
+        model.addAttribute("users", allUsers);
+        
 		return "chat"; 
 	}
 	
 	// Viestilomakkeen tietojen ottaminen vastaan
 	@RequestMapping(value = "/chat", method = RequestMethod.POST)
-	public String addNew(@RequestParam String action, @ModelAttribute(value="message") Message mes, BindingResult result, HttpServletRequest request) {
+	public String addNew(@RequestParam String action, @ModelAttribute(value="user") User user, BindingResult result, HttpServletRequest request) {
 		if (result.hasErrors()) {
 			return "chat";
 		}
@@ -164,9 +166,14 @@ public class ChatController {
 		if (action.equals("Send")){
 			
 		}
+		
+		if (action.equals("Chat")){
+			HttpSession session = request.getSession();
+			String currentUser = (String)request.getParameter("user");
+			session.setAttribute("currentChat", currentUser);
+		}
 			
 		return "redirect:/chat"; 
 	}
-	
 	
 }

@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -72,6 +75,34 @@ public class JdbcUserDAO implements UserDAO {
 				pstmt.close();
 				return true;
 			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+				conn.close();
+				} catch (SQLException e) {}
+			}
+		}
+	}
+	
+	public List<User> getAllUsers(String loggedAs){
+		List<User> allUsers = new ArrayList<User>();
+		String sql = "SELECT username FROM user WHERE NOT username = (?) ORDER BY username ASC";
+		Connection conn = null;
+		try{
+			conn = dataSource.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, loggedAs);						
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()){
+				User user = new User();
+				user.setNickname(rs.getString(1));
+				allUsers.add(user);
+			}
+			pstmt.close();
+			rs.close();
+			return allUsers;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
