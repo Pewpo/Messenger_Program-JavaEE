@@ -4,41 +4,47 @@ import java.sql.Timestamp;
 
 public class Message {
 	private String mes;
-	private String user;
-	private Timestamp timestamp;
+	private int iduser;
+	private int idchat;
 	
 	
 	public Message(){
 		this.mes = "";
-		this.user = "";
+		this.iduser = 0;
+		this.idchat = 0;
 	}
 	
-	public Message(Timestamp timestamp, String mes, String user){
-		this.timestamp = timestamp;
+	public Message(String mes, int iduser, int idchat){
 		this.mes = mes;
-		this.user = user;
+		this.iduser = iduser;
+		this.idchat = idchat;
 	}
 	
-	public Timestamp getTimestamp() {
-		return timestamp;
-	}
-	public void setTimestamp(Timestamp timestamp) {
-		this.timestamp = timestamp;
-	}
 	public String getMes() {
 		return mes;
 	}
+
 	public void setMes(String mes) {
 		this.mes = mes;
 	}
-	public String getUser() {
-		return user;
+
+	public int getIduser() {
+		return iduser;
 	}
-	public void setUser(String user) {
-		this.user = user;
+
+	public void setIduser(int iduser) {
+		this.iduser = iduser;
 	}
-	
+
+	public int getIdchat() {
+		return idchat;
+	}
+
+	public void setIdchat(int idchat) {
+		this.idchat = idchat;
+	}
+
 	public String toString(){
-		return timestamp + ", " + user + ": " + mes + "\n";
+		return mes + ", " + iduser + ": " + idchat + "\n";
 	}
 }

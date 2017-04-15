@@ -14,18 +14,22 @@
 </script>
 </head>
 <body>
+<% String username = (String)request.getSession().getAttribute("username"); %>
 <h1>
 	This is a chatroom!
 </h1>
 
-<p>  Messages: <br> <textarea id="messagesTextArea" rows="30" cols="200">${messages}</textarea></p>
+<p>Logged in as: <%= username %></p><form:form method="POST" modelAttribute="user"><input type="submit" name="action" value="Log out"/></form:form>
+
+
+<p>  Messages: <br> <textarea id="messagesTextArea" rows="30" cols="100">${messages}</textarea></p>
 <form:form method="POST" modelAttribute="message">
 	<table>
 		<tr>
 			<td><label for="mes">Message:</label></td>
 			<td><form:input path="mes" id="mes" /></td>
 			<td><form:errors path="mes" cssClass="mes" /></td>
-			<td><input type="submit" value="Send"/></td>
+			<td><input type="submit" name="action" value="Send"/></td>
 		</tr>
 
 	</table>

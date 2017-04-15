@@ -3,7 +3,8 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-	<import resource="database/Spring-Datasource.xml" />
-	<import resource="message/Spring-Message.xml" />
-	<import resource="user/Spring-User.xml" />
+	<bean id="userDAO" class="fi.jamk.chatapp.JdbcUserDAO">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
 </beans>

@@ -22,16 +22,16 @@ public class JdbcMessageDAO implements MessageDAO {
 
 	public void insert(Message message){
 
-		String sql = "INSERT INTO messages " +
-				"(ts, message, username) VALUES (?, ?, ?)";
+		String sql = "INSERT INTO message " +
+				"(message, user_iduser, chat_idchat) VALUES (?, ?, ?)";
 		Connection conn = null;
 
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setTimestamp(1, message.getTimestamp());
-			ps.setString(2, message.getMes());
-			ps.setString(3, message.getUser());
+			ps.setString(1, message.getMes());
+			ps.setInt(2, message.getIduser());
+			ps.setInt(3, message.getIdchat());
 			ps.executeUpdate();
 			ps.close();
 
@@ -49,7 +49,7 @@ public class JdbcMessageDAO implements MessageDAO {
 
 	public List<Message> getAllMessages(){
 
-		String sql = "SELECT * FROM messages";
+		String sql = "SELECT * FROM message";
 
 		Connection conn = null;
 
@@ -61,9 +61,9 @@ public class JdbcMessageDAO implements MessageDAO {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				message = new Message(
-					rs.getTimestamp("ts"),
 					rs.getString("message"),
-					rs.getString("username")
+					rs.getInt("user_iduser"),
+					rs.getInt("chat_idchat")
 				);
 				messages.add(message);
 			}
@@ -80,30 +80,5 @@ public class JdbcMessageDAO implements MessageDAO {
 			}
 		}
 	}
-	//Trying to find user from database
-	public boolean findUser(String name, String psw) {
-		String sql = "SELECT * FROM messages WHERE username =  (?)" ;
-		Connection conn = null;		
-		try{
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, name);						
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()){			
-					return true;
-			}
-			
-			ps.close();
-			rs.close();
-			return false;
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-				conn.close();
-				} catch (SQLException e) {}
-			}
-		}	
-	}
+	
 }

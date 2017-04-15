@@ -5,5 +5,5 @@
 
 	<import resource="database/Spring-Datasource.xml" />
 	<import resource="message/Spring-Message.xml" />
-
+	<import resource="user/Spring-User.xml" />
 </beans>

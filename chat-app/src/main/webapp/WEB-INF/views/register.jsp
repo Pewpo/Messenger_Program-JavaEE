@@ -3,30 +3,22 @@
 <%@ page session="false" %>
 <html>
 <head>
-	<title>Login | Chatroom</title>
+	<title>Register | Chatroom</title>
 </head>
 <body>
 <h1>
-	Welcome to chatroom!  
+	Register yourself to the chatroom!  
 </h1>
 
-<p>Insert your nickname and password to log in.</p>
-
+<p>Insert your nickname and password twice to register.</p>
+<p style="color: red;">
 	<% 
 		String error = request.getParameter("error");
-		String status = request.getParameter("status");
 		if (error == null){
 			error = "";
 		}
-		if (status == null){
-			status = "";
-		}
 	%>
-<p style="color: red;">
 		<%= error %>
-</p>
-<p style="color: green;">
-		<%= status %>
 </p>
 
 <form:form method="POST" modelAttribute="user">
@@ -43,13 +35,19 @@
 			<td><form:errors path="password" cssClass="password" />
 		</tr>
 		<tr>
-			<td><br><input type="submit" value="Log in"/></td>
+			<td><label for="password">Re-Password:</label></td>
+			<td><form:input type="password" path="repassword" id="repassword" /></td>
+			<td><form:errors path="repassword" cssClass="repassword" />
 		</tr>
-	</table><br>
-	<a href="register">Don't have an account? Register here.</a>
+		<tr>
+			<td><br><input type="submit" value="Register"/></td>
+		</tr>
+
+	</table>
+	
+	
 </form:form>
-
-
+<button onclick="location.href = '/';" id="myButton">Back to home</button>
 
 </body>
 </html>
