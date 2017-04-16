@@ -176,7 +176,12 @@ public class ChatController {
 			session.setAttribute("currentChat", currentUser);
 			System.out.println(currentUser);
 			answer = chatDAO.findChat(session.getAttribute("username").toString(), currentUser);
-			System.out.println("T컴컴컴컴컴컴컴LLL컴컴�" + answer);
+			if(answer == 0){
+				chatDAO.addNewChat(session.getAttribute("username").toString(), currentUser);			
+			}
+			else{
+				//toiminta sille jso keskustelu on jo olemassa
+			}
 			
 		}
 			
