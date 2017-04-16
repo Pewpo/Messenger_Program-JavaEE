@@ -9,7 +9,6 @@ import sun.security.util.Password;
 @SuppressWarnings("restriction")
 public class User {
 	
-	
 	@Size(min=1, message = "Fill field first.")
 	private String nickname = null;
 

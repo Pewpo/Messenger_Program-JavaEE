@@ -33,6 +33,8 @@ public class ChatController {
 	
 	private MessageDAO messageDAO = (MessageDAO) context.getBean("messageDAO");
 	private UserDAO userDAO = (UserDAO) context.getBean("userDAO");
+	private ChatDAO chatDAO = (ChatDAO) context.getBean("chatDAO");
+	
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
@@ -168,9 +170,14 @@ public class ChatController {
 		}
 		
 		if (action.equals("Chat")){
+			int answer = 0;
 			HttpSession session = request.getSession();
 			String currentUser = (String)request.getParameter("user");
 			session.setAttribute("currentChat", currentUser);
+			System.out.println(currentUser);
+			answer = chatDAO.findChat(session.getAttribute("username").toString(), currentUser);
+			System.out.println("T컴컴컴컴컴컴컴LLL컴컴�" + answer);
+			
 		}
 			
 		return "redirect:/chat"; 
