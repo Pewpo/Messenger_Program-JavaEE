@@ -1,23 +1,25 @@
 package fi.jamk.chatapp;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Message {
 	private String mes;
-	private int iduser;
+	private String username;
 	private int idchat;
-	
+	private Timestamp ts;
 	
 	public Message(){
-		this.mes = "";
-		this.iduser = 0;
-		this.idchat = 0;
+
 	}
 	
-	public Message(String mes, int iduser, int idchat){
+	public Message(String mes, String username, int idchat, Timestamp ts){
 		this.mes = mes;
-		this.iduser = iduser;
+		this.username = username;
 		this.idchat = idchat;
+		this.ts = ts;
 	}
 	
 	public String getMes() {
@@ -28,12 +30,12 @@ public class Message {
 		this.mes = mes;
 	}
 
-	public int getIduser() {
-		return iduser;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setIduser(int iduser) {
-		this.iduser = iduser;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public int getIdchat() {
@@ -43,8 +45,27 @@ public class Message {
 	public void setIdchat(int idchat) {
 		this.idchat = idchat;
 	}
+	
+	public Timestamp getTs() {
+		return ts;
+	}
+
+	public void setTs(Timestamp ts) {
+		this.ts = ts;
+	}
 
 	public String toString(){
-		return mes + ", " + iduser + ": " + idchat + "\n";
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = null;
+		SimpleDateFormat format2 = null;
+		try {
+			date = format.parse(ts.toString());
+			format2 = new SimpleDateFormat("HH:mm dd.MM.yyyy ");
+		} catch (ParseException e) { 
+			e.printStackTrace();
+		}
+		
+		return username + ": " + mes + "\n                   " + format2.format(date) + "\n";
 	}
 }

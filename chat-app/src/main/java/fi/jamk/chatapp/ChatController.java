@@ -129,14 +129,16 @@ public class ChatController {
 		Message mes = new Message();
 		model.addAttribute("message", mes);
 		
-		List<Message> allMessages = messageDAO.getAllMessages();
-        String messagesAll = "";
-        
-        for (Message mess : allMessages) {
-        	messagesAll += mess.toString(); 
-        }
-        model.addAttribute("messages", messagesAll);
-        
+		if (session.getAttribute("chatID") != null){
+			List<Message> allChatMessages = messageDAO.getAllChatMessages((Integer)session.getAttribute("chatID"));
+	        String chatMessagesAll = "";
+	        
+	        for (Message mess : allChatMessages) {
+	        	chatMessagesAll += mess.toString(); 
+	        }
+	        model.addAttribute("messages", chatMessagesAll);
+		}
+
         List<User> allUsers = userDAO.getAllUsers((String)session.getAttribute("username"));
         
         model.addAttribute("users", allUsers);
@@ -146,45 +148,48 @@ public class ChatController {
 	
 	// Viestilomakkeen tietojen ottaminen vastaan
 	@RequestMapping(value = "/chat", method = RequestMethod.POST)
-	public String addNew(@RequestParam String action, @ModelAttribute(value="user") User user, BindingResult result, HttpServletRequest request) {
+	public String addNew(Model model, @RequestParam String action, @ModelAttribute(value="user") User user, @ModelAttribute(value="message") 
+						Message mes, BindingResult result, HttpServletRequest request) {
 		if (result.hasErrors()) {
 			return "chat";
 		}
-		
-		/*Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+	
 		HttpSession session = request.getSession();
-		mes.setIduser(1);
-		//((String)session.getAttribute("username"));
-		mes.setIdchat(1);
-		messageDAO.insert(mes);
-		*/
 		if (action.equals("Log out")){
-			HttpSession session = request.getSession();
 			if (session != null) {
 			    session.invalidate();
 			}
 			return "redirect:/";
 	    }
 		if (action.equals("Send")){
-			
+			if (session.getAttribute("chatID") != null){
+				if (!mes.getMes().isEmpty()){
+					Timestamp timestamp = new Timestamp(System.currentTimeMillis());				
+					Message message = new Message(mes.getMes(), (String)session.getAttribute("username"), (Integer)session.getAttribute("chatID"), timestamp);
+					messageDAO.insert(message);
+				}else{
+					model.addAttribute("error", "Insert message first.");
+					return "redirect:/chat";
+				}
+			}else{
+				model.addAttribute("error", "Select first person to chat with.");
+				return "redirect:/chat";
+			}
 		}
 		
 		if (action.equals("Chat")){
 			int answer = 0;
-			HttpSession session = request.getSession();
 			String currentUser = (String)request.getParameter("user");
 			session.setAttribute("currentChat", currentUser);
-			System.out.println(currentUser);
-			answer = chatDAO.findChat(session.getAttribute("username").toString(), currentUser);
-			if(answer == 0){
-				chatDAO.addNewChat(session.getAttribute("username").toString(), currentUser);			
+			answer = chatDAO.findChat((String)session.getAttribute("username"), currentUser);
+			if (answer == 0){
+				chatDAO.addNewChat((String)session.getAttribute("username"), currentUser);			
+			}else{
+				int chatID = chatDAO.getChat((String)session.getAttribute("username"), currentUser);
+				session.setAttribute("chatID", chatID);
+				
 			}
-			else{
-				//toiminta sille jso keskustelu on jo olemassa
-			}
-			
 		}
-			
 		return "redirect:/chat"; 
 	}
 	

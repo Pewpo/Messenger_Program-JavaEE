@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface MessageDAO {
 	public void insert(Message message);
-	public List<Message> getAllMessages();
+	public List<Message> getAllChatMessages(int chatid);
 }

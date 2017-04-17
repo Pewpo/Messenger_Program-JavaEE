@@ -3,7 +3,9 @@ package fi.jamk.chatapp;
 public class Chat_has_user {
 	private int user_id;
 	private int chat_id;
+	
 	public Chat_has_user(){}
+	
 	public int getUser_id() {
 		return user_id;
 	}

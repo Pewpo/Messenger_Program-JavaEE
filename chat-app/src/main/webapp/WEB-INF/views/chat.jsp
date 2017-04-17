@@ -5,16 +5,30 @@
 <html>
 <head>
 	<title>Chat | Chatroom</title>
-	<script src="jquery-3.2.0.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
 	<script type="text/javascript">
 		$(document).ready(function(){
 		   $('#messagesTextArea').scrollTop($('#messagesTextArea')[0].scrollHeight);
 		});
-
+		
+		$(function () {
+		    $("#mestextarea").keypress(function (e) {
+		        var code = (e.keyCode ? e.keyCode : e.which);
+		        if (code == 13 && !e.shiftKey) {
+		        	e.preventDefault();
+		        	$("#submitSend").click();
+		            return true;
+		        }
+		    });
+		});
+		
+		function init(){
+		    document.getElementById("mestextarea").focus();
+		}
 
 </script>
 </head>
-<body>
+<body onload="init()">
 <% String username = (String)request.getSession().getAttribute("username");
    String currentlyChatting = "";
    if (request.getSession().getAttribute("currentChat") == null){
@@ -28,12 +42,26 @@
 	This is a chatroom!
 </h1>
 
+<% 
+		String error = request.getParameter("error");
+		String status = request.getParameter("status");
+		if (error == null){
+			error = "";
+		}
+		if (status == null){
+			status = "";
+		}
+	%>
+<p style="color: red;">
+		<%= error %>
+</p>
+
 <p>Logged in as: <b><%= username %></b></p><form:form method="POST" modelAttribute="user"><input type="submit" name="action" value="Log out"/></form:form>
 
 <div >
 	<div style="display:inline-block">
 		<p>Currently chatting with: <b><%= currentlyChatting %></b>
-		<p>Messages: <br> <textarea id="messagesTextArea" rows="30" cols="100">${messages}</textarea></p>
+		<p>Messages: <br> <textarea readonly id="messagesTextArea" rows="30" cols="100">${messages}</textarea></p>
 	</div>	
 	<div style="display:inline-block; vertical-align: top; margin-left: 20px;">
 	<p>Select a person to chat with.</p>
@@ -45,9 +73,7 @@
 						String currentChat = (String)request.getSession().getAttribute("currentChat");
 						if (currentChat != null){	
 							User user = (User) pageContext.getAttribute("username");
-							System.out.println("currentchat: " + currentChat + " user nickname: " + user.getNickname());
 							if (currentChat.intern() == user.getNickname().intern()){
-								System.out.println("taas t‰‰ll‰");
 								selected = "selected";
 							}else{
 								selected = "";
@@ -62,13 +88,16 @@
 	</div>
 </div>
 
-<form:form method="POST" modelAttribute="message">
+<form:form id="mesform" method="POST" modelAttribute="message">
 	<table>
 		<tr>
 			<td><label for="mes">Message:</label></td>
-			<td><form:input path="mes" id="mes" /></td>
+		</tr>
+			
+		<tr>
+			<td><form:textarea rows="5" cols="100" path="mes" id="mestextarea" /></td>
 			<td><form:errors path="mes" cssClass="mes" /></td>
-			<td><input type="submit" name="action" value="Send"/></td>
+			<td><input type="submit" id="submitSend" name="action" value="Send"/></td>
 		</tr>
 
 	</table>
