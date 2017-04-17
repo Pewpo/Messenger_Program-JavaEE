@@ -31,7 +31,6 @@ public class JdbcUserDAO implements UserDAO {
 			if (rs.next()){
 				correctPassword = rs.getString(1);
 			}
-			System.out.println(correctPassword);
 			ps.close();
 			rs.close();
 

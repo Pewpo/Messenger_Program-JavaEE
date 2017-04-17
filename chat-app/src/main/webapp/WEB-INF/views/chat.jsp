@@ -25,6 +25,27 @@
 		function init(){
 		    document.getElementById("mestextarea").focus();
 		}
+	
+		var idleTime = 0;
+		$(document).ready(function () {
+		    //Increment the idle time counter every minute.
+		    var idleInterval = setInterval(timerIncrement, 1000); // 1 minute
+
+		    //Zero the idle timer on mouse movement.
+		    $(this).mousemove(function (e) {
+		        idleTime = 0;
+		    });
+		    $(this).keypress(function (e) {
+		        idleTime = 0;
+		    });
+		});
+
+		function timerIncrement() {
+		    idleTime = idleTime + 1;
+		    if (idleTime > 3) { // 20 minutes
+				$('#selectChat').trigger('click');
+		    }
+		}
 
 </script>
 </head>
@@ -68,6 +89,7 @@
 	<% String selected = ""; %>
 		<form:form method="POST" modelAttribute="user">
 			<select name="user">
+				<option value=""></option>	
 				<c:forEach var="username" items="${users}">
 					<% 
 						String currentChat = (String)request.getSession().getAttribute("currentChat");
@@ -83,7 +105,7 @@
 				  		<option <%=selected %> value="${username}">${username}</option>	
 				</c:forEach>
 			</select>
-			<input type="submit" name="action" value="Chat"/>
+			<input type="submit" id="selectChat" name="action" value="Chat"/>
 		</form:form>
 	</div>
 </div>

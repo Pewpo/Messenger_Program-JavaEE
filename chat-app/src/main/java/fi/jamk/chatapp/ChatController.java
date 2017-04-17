@@ -179,15 +179,22 @@ public class ChatController {
 		
 		if (action.equals("Chat")){
 			int answer = 0;
+			int chatID = 0;
 			String currentUser = (String)request.getParameter("user");
-			session.setAttribute("currentChat", currentUser);
-			answer = chatDAO.findChat((String)session.getAttribute("username"), currentUser);
-			if (answer == 0){
-				chatDAO.addNewChat((String)session.getAttribute("username"), currentUser);			
+			if (currentUser.intern() != ""){
+				session.setAttribute("currentChat", currentUser);
+				answer = chatDAO.findChat((String)session.getAttribute("username"), currentUser);
+				if (answer == 0){
+					chatDAO.addNewChat((String)session.getAttribute("username"), currentUser);
+					chatID = chatDAO.getChat((String)session.getAttribute("username"), currentUser);
+					session.setAttribute("chatID", chatID);
+				}else{
+					chatID = chatDAO.getChat((String)session.getAttribute("username"), currentUser);
+					session.setAttribute("chatID", chatID);
+				}
 			}else{
-				int chatID = chatDAO.getChat((String)session.getAttribute("username"), currentUser);
-				session.setAttribute("chatID", chatID);
-				
+				model.addAttribute("error", "Select first person to chat with.");
+				return "redirect:/chat";
 			}
 		}
 		return "redirect:/chat"; 
